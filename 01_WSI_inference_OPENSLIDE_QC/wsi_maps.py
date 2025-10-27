@@ -7,8 +7,9 @@ import cv2
 def make_overlay(slide, wsi_heatmap_im, p_s, patch_n_w_l0, patch_n_h_l0, overlay_factor):
     w_l0, h_l0 = slide.level_dimensions[0]
 
-    slide_reduced = slide.get_thumbnail((w_l0 / overlay_factor, h_l0 / overlay_factor))
+    slide_reduced = slide.get_thumbnail((w_l0 / overlay_factor, h_l0 / overlay_factor)).convert('RGB')
 
-    heatmap_temp = wsi_heatmap_im.resize(slide_reduced.size, Image.Resampling.LANCZOS)
+    # Ensure heatmap is in RGB mode before resize
+    heatmap_temp = wsi_heatmap_im.convert('RGB').resize(slide_reduced.size, Image.Resampling.LANCZOS)
     overlay = cv2.addWeighted(np.array(slide_reduced), 0.7, np.array(heatmap_temp), 0.3, 0)
     return (overlay)

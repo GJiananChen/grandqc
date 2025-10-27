@@ -133,6 +133,8 @@ for slide_name in slide_names[start:end]:
 
         # LOAD TISSUE DETECTION MAP
         tis_det_map = Image.open(os.path.join(OUTPUT_DIR, 'tis_det_mask', slide_name + '_MASK.png'))
+        # Convert to grayscale mode to ensure compatibility with LANCZOS resize
+        tis_det_map = tis_det_map.convert('L')
         '''
         Tissue detection map is generated on MPP = 10
         This map is used for on-fly control of the necessity of model inference.

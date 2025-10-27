@@ -82,7 +82,7 @@ for slide_name in slide_names:
         mpp = round(float(slide.properties["openslide.mpp-x"]), 4)
         reduction_factor = MPP_MODEL_TD / mpp
 
-        image_or = slide.get_thumbnail((w_l0 // reduction_factor, h_l0 // reduction_factor))
+        image_or = slide.get_thumbnail((w_l0 // reduction_factor, h_l0 // reduction_factor)).convert('RGB')
         image_or.save(tis_det_dir_thumb + slide_name + ".jpg", quality = 80)
 
         '''
@@ -151,7 +151,7 @@ for slide_name in slide_names:
                 end_image = np.concatenate((end_image, temp_image), axis=0)
                 end_image_class_map = np.concatenate((end_image_class_map, temp_image_class_map), axis=0)
 
-        Image.fromarray(end_image).save(os.path.join(tis_det_dir_mask, slide_name + '_MASK.png'))
+        Image.fromarray(end_image.astype(np.uint8)).save(os.path.join(tis_det_dir_mask, slide_name + '_MASK.png'))
         Image.fromarray(end_image_class_map).save(os.path.join(tis_det_dir_mask_col, slide_name + '_MASK_COL.png'))
         overlay = cv2.addWeighted(np.array(image), OVER_IMAGE, end_image_class_map, OVER_MASK, 0)
         overlay = Image.fromarray(overlay)
